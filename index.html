@@ -14,10 +14,6 @@
             --text-muted: #6B7280;
             --border: #E5E7EB;
             --success: #10B981;
-            --warning: #F59E0B;
-            --danger: #EF4444;
-            --ai-accent: #8B5CF6; /* Violet for AI */
-            --ai-accent-hover: #7C3AED;
             --font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
         }
 
@@ -32,7 +28,6 @@
             line-height: 1.5;
         }
 
-        /* Layout */
         .app-container {
             display: grid;
             grid-template-columns: 380px 1fr;
@@ -44,7 +39,6 @@
             .app-container { grid-template-columns: 1fr; height: auto; overflow-y: auto; }
         }
 
-        /* Sidebar (Inputs) */
         .sidebar {
             background: var(--bg-card);
             border-right: 1px solid var(--border);
@@ -55,17 +49,15 @@
             gap: 24px;
         }
 
-        .header { margin-bottom: 20px; }
-        .header h1 { font-size: 20px; font-weight: 700; margin: 0 0 4px 0; color: #111827; }
-        .header p { font-size: 13px; color: var(--text-muted); margin: 0; }
+        .header h1 { font-size: 20px; font-weight: 700; margin: 0; color: #111827; }
+        .header p { font-size: 13px; color: var(--text-muted); margin: 4px 0 0 0; }
 
-        .control-group { margin-bottom: 24px; }
         .control-group-title {
-            font-size: 12px;
+            font-size: 11px;
             text-transform: uppercase;
             letter-spacing: 0.05em;
             color: var(--text-muted);
-            font-weight: 600;
+            font-weight: 700;
             margin-bottom: 12px;
             border-bottom: 1px solid var(--border);
             padding-bottom: 4px;
@@ -74,7 +66,6 @@
         .input-row { margin-bottom: 16px; }
         .input-label { display: flex; justify-content: space-between; font-size: 13px; font-weight: 500; margin-bottom: 6px; }
         .input-wrapper { display: flex; align-items: center; gap: 10px; }
-        .input-helper { font-size: 11px; color: var(--text-muted); margin-top: 4px; text-align: right; }
         
         input[type="range"] {
             flex: 1;
@@ -85,1054 +76,273 @@
             cursor: pointer;
         }
         input[type="range"]::-webkit-slider-thumb {
-            appearance: none;
-            width: 16px;
-            height: 16px;
-            background: var(--primary);
-            border-radius: 50%;
-            cursor: pointer;
-            border: 2px solid white;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.3);
+            appearance: none; width: 16px; height: 16px; background: var(--primary);
+            border-radius: 50%; border: 2px solid white; box-shadow: 0 1px 3px rgba(0,0,0,0.2);
         }
 
         input[type="number"] {
-            width: 80px;
-            padding: 6px;
-            border: 1px solid var(--border);
-            border-radius: 6px;
-            font-size: 13px;
-            text-align: right;
-            font-family: inherit;
+            width: 85px; padding: 6px; border: 1px solid var(--border);
+            border-radius: 6px; font-size: 13px; text-align: right;
         }
-        input[type="number"]:focus { border-color: var(--primary); }
 
         .select-wrapper select {
-            width: 100%;
-            padding: 8px 12px;
-            border: 1px solid var(--border);
-            border-radius: 6px;
-            background-color: white;
-            font-size: 14px;
-            margin-bottom: 10px;
+            width: 100%; padding: 8px; border: 1px solid var(--border);
+            border-radius: 6px; background: white; font-size: 13px; margin-bottom: 12px;
         }
 
-        /* Main Content (Outputs) */
-        .main-content {
-            padding: 32px;
-            overflow-y: auto;
-            display: flex;
-            flex-direction: column;
-            gap: 24px;
-        }
+        .main-content { padding: 32px; overflow-y: auto; display: flex; flex-direction: column; gap: 24px; }
 
-        /* Top KPI Cards */
-        .kpi-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 16px;
+        .view-toggle {
+            display: flex; background: #E5E7EB; padding: 3px; border-radius: 8px; width: fit-content;
         }
-
-        .kpi-card {
-            background: var(--bg-card);
-            padding: 20px;
-            border-radius: 12px;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
-            border: 1px solid var(--border);
+        .view-btn {
+            padding: 6px 16px; font-size: 12px; font-weight: 600; border-radius: 6px;
+            cursor: pointer; color: var(--text-muted); transition: 0.2s;
         }
-        .kpi-label { font-size: 13px; color: var(--text-muted); font-weight: 500; margin-bottom: 8px; }
-        .kpi-value { font-size: 28px; font-weight: 700; color: #111827; letter-spacing: -0.5px; }
-        .kpi-sub { font-size: 12px; margin-top: 4px; display: flex; align-items: center; gap: 4px; }
-        .kpi-sub.positive { color: var(--success); }
-        .kpi-sub.negative { color: var(--danger); }
-        .kpi-sub.neutral { color: var(--text-muted); }
+        .view-btn.active { background: white; color: var(--text-main); box-shadow: 0 1px 2px rgba(0,0,0,0.1); }
 
-        /* Funnel View */
-        .section-card {
-            background: var(--bg-card);
-            border-radius: 12px;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
-            border: 1px solid var(--border);
-            padding: 24px;
-        }
-        .section-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
-        .section-title { font-size: 16px; font-weight: 600; color: #111827; }
+        .kpi-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; }
+        .kpi-card { background: white; padding: 20px; border-radius: 12px; border: 1px solid var(--border); }
+        .kpi-label { font-size: 12px; color: var(--text-muted); font-weight: 600; margin-bottom: 8px; text-transform: uppercase; }
+        .kpi-value { font-size: 26px; font-weight: 700; color: #111827; }
+        .kpi-sub { font-size: 12px; margin-top: 4px; color: var(--text-muted); }
 
-        .funnel-container {
-            display: flex;
-            flex-direction: column;
-            gap: 4px;
-        }
-
+        .section-card { background: white; border-radius: 12px; border: 1px solid var(--border); padding: 24px; }
         .funnel-step {
-            display: grid;
-            grid-template-columns: 150px 1fr 120px 100px;
-            align-items: center;
-            padding: 12px 16px;
-            border-radius: 8px;
-            background: #F9FAFB;
-            transition: background 0.2s;
+            display: grid; grid-template-columns: 160px 1fr 140px; align-items: center;
+            padding: 14px; border-bottom: 1px solid #F3F4F6;
         }
-        .funnel-step:hover { background: #F3F4F6; }
-        .funnel-name { font-size: 13px; font-weight: 600; color: var(--text-muted); }
-        
-        .funnel-visual-container { position: relative; height: 24px; display: flex; align-items: center; margin: 0 20px; }
-        .funnel-bar {
-            height: 12px;
-            background: var(--primary);
-            border-radius: 6px;
-            min-width: 4px;
-            opacity: 0.8;
-        }
-        .funnel-bar-bg {
-            position: absolute;
-            top: 50%;
-            left: 0;
-            width: 100%;
-            height: 4px;
-            background: #E5E7EB;
-            transform: translateY(-50%);
-            z-index: 0;
-            border-radius: 2px;
-        }
-
+        .funnel-name { font-size: 13px; font-weight: 600; }
+        .funnel-bar-bg { height: 8px; background: #F3F4F6; border-radius: 4px; position: relative; margin: 0 20px; }
+        .funnel-bar { height: 8px; background: var(--primary); border-radius: 4px; transition: width 0.4s ease; }
         .funnel-count { font-size: 14px; font-weight: 700; text-align: right; }
-        .funnel-cost { font-size: 12px; color: var(--text-muted); text-align: right; }
 
-        /* Methodology & Actions */
-        .actions-bar {
-            display: flex;
-            justify-content: flex-end;
-            gap: 12px;
-            margin-bottom: 8px;
-            flex-wrap: wrap;
-        }
-        
-        .btn {
-            padding: 8px 16px;
-            border-radius: 6px;
-            font-size: 13px;
-            font-weight: 500;
-            cursor: pointer;
-            transition: all 0.2s;
-            border: 1px solid transparent;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-        }
-        .btn-primary { background: var(--primary); color: white; }
-        .btn-primary:hover { background: var(--primary-hover); }
-        .btn-outline { background: white; border-color: var(--border); color: var(--text-main); }
-        .btn-outline:hover { background: #F9FAFB; }
-        
-        /* AI Button Styling */
-        .btn-ai {
-            background: linear-gradient(135deg, var(--ai-accent), #7C3AED);
-            color: white;
-            border: none;
-            box-shadow: 0 2px 4px rgba(124, 58, 237, 0.2);
-        }
-        .btn-ai:hover {
-            box-shadow: 0 4px 6px rgba(124, 58, 237, 0.3);
-            transform: translateY(-1px);
-        }
-        .btn-ai:disabled { opacity: 0.7; cursor: not-allowed; transform: none; }
-
-        .methodology {
-            margin-top: 24px;
-            border-top: 1px solid var(--border);
-            padding-top: 24px;
-        }
-        .methodology details { font-size: 13px; color: var(--text-muted); }
-        .methodology summary { cursor: pointer; font-weight: 500; color: var(--text-main); margin-bottom: 8px; }
-        .methodology ul { padding-left: 20px; }
-        .methodology li { margin-bottom: 4px; }
-
-        /* Toggle Switches */
-        .toggle-group {
-            display: flex;
-            background: #E5E7EB;
-            padding: 2px;
-            border-radius: 6px;
-            margin-bottom: 16px;
-        }
-        .toggle-opt {
-            flex: 1;
-            text-align: center;
-            padding: 6px;
-            font-size: 12px;
-            font-weight: 500;
-            cursor: pointer;
-            border-radius: 4px;
-            color: var(--text-muted);
-        }
-        .toggle-opt.active {
-            background: white;
-            color: var(--text-main);
-            box-shadow: 0 1px 2px rgba(0,0,0,0.1);
-        }
-
-        /* Modal */
         .modal-overlay {
-            position: fixed;
-            top: 0; left: 0; right: 0; bottom: 0;
-            background: rgba(0,0,0,0.5);
-            display: none;
-            justify-content: center;
-            align-items: center;
-            z-index: 1000;
-            backdrop-filter: blur(2px);
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.4); display: none; justify-content: center; align-items: center; z-index: 100;
         }
         .modal-overlay.open { display: flex; }
-        .modal-card {
-            background: white;
-            width: 90%;
-            max-width: 600px;
-            border-radius: 12px;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.15);
-            overflow: hidden;
-            display: flex;
-            flex-direction: column;
-            max-height: 85vh;
-        }
-        .modal-header {
-            padding: 16px 24px;
-            border-bottom: 1px solid var(--border);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            background: #F9FAFB;
-        }
-        .modal-title { font-weight: 600; color: #111827; display: flex; align-items: center; gap: 8px; }
-        .close-btn { background: none; border: none; font-size: 20px; cursor: pointer; color: var(--text-muted); }
-        .modal-body { padding: 24px; overflow-y: auto; font-size: 14px; line-height: 1.6; color: #374151; white-space: pre-wrap; }
-        .modal-footer { padding: 16px 24px; border-top: 1px solid var(--border); display: flex; justify-content: flex-end; }
-        
-        .loading-spinner {
-            border: 3px solid #f3f3f3;
-            border-top: 3px solid var(--ai-accent);
-            border-radius: 50%;
-            width: 20px;
-            height: 20px;
-            animation: spin 1s linear infinite;
-        }
-        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-
+        .modal-card { background: white; padding: 24px; border-radius: 12px; text-align: center; width: 300px; }
     </style>
 </head>
 <body>
 
 <div class="app-container">
-    
-    <!-- LEFT PANEL: CONTROLS -->
     <div class="sidebar">
         <div class="header">
-            <h1>Pipeline Simulator</h1>
-            <p>B2B Media Planning & Forecasting</p>
+            <h1>B2B Budget Tool</h1>
+            <p>Based on BDM Calculator Logic</p>
         </div>
 
         <div class="control-group">
-            <div class="select-wrapper">
-                <label class="input-label">Scenario Preset</label>
-                <select id="presetSelect" onchange="applyPreset()">
-                    <option value="custom">Custom Configuration</option>
-                    <option value="saas_mid" selected>SaaS Mid-Market (B2B)</option>
-                    <option value="saas_ent">Enterprise / ABM</option>
-                    <option value="saas_smb">High Volume / SMB</option>
-                </select>
+            <div class="control-group-title">Market Inputs</div>
+            <div class="input-row">
+                <div class="input-label"><span>Target Audience</span></div>
+                <div class="input-wrapper">
+                    <input type="range" id="in_audience" min="1000" max="1000000" step="1000" value="50000" oninput="syncInput(this)">
+                    <input type="number" id="num_audience" value="50000" onchange="syncInput(this)">
+                </div>
             </div>
-            <div class="toggle-group">
-                <div class="toggle-opt active" id="modeBrand" onclick="setMode('Brand')">Brand (CPM)</div>
-                <div class="toggle-opt" id="modeMixed" onclick="setMode('Mixed')">Mixed</div>
-                <div class="toggle-opt" id="modeDemand" onclick="setMode('Demand')">Demand (CPC)</div>
-            </div>
-        </div>
-
-        <!-- Budget & Reach -->
-        <div class="control-group">
-            <div class="control-group-title">Media Inputs</div>
             
             <div class="input-row">
-                <div class="input-label"><span>Audience Size</span> <span id="val_audience"></span></div>
+                <div class="input-label"><span>Expected Frequency</span></div>
                 <div class="input-wrapper">
-                    <input type="range" id="in_audience" min="1000" max="5000000" step="1000" oninput="syncInput('slide', this.id)">
-                    <input type="number" id="num_audience" onchange="syncInput('num', 'in_audience')">
+                    <input type="range" id="in_freq" min="1" max="12" step="1" value="4" oninput="syncInput(this)">
+                    <input type="number" id="num_freq" value="4" onchange="syncInput(this)">
                 </div>
             </div>
 
             <div class="input-row">
-                <div class="input-label"><span>Duration (Days)</span></div>
+                <div class="input-label"><span>Avg. CPM ($)</span></div>
                 <div class="input-wrapper">
-                    <input type="range" id="in_duration" min="7" max="365" step="1" oninput="syncInput('slide', this.id)">
-                    <input type="number" id="num_duration" onchange="syncInput('num', 'in_duration')">
-                </div>
-            </div>
-
-            <!-- Calculation Mode Toggle inside inputs -->
-            <div class="select-wrapper">
-                <label class="input-label">Solve For</label>
-                <select id="solveMode" onchange="toggleBudgetMode()">
-                    <option value="budget">Fixed Budget</option>
-                    <option value="reach">Target Reach %</option>
-                </select>
-            </div>
-
-            <div id="wrapper_budget" class="input-row">
-                <div class="input-label"><span>Total Campaign Budget ($)</span></div>
-                <div class="input-wrapper">
-                    <input type="range" id="in_budget" min="1000" max="500000" step="500" oninput="syncInput('slide', this.id)">
-                    <input type="number" id="num_budget" onchange="syncInput('num', 'in_budget')">
-                </div>
-                <div class="input-helper" id="helper_spend_pace">Monthly Spend: $0</div>
-            </div>
-
-            <div id="wrapper_reach" class="input-row" style="display:none;">
-                <div class="input-label"><span>Target Reach %</span></div>
-                <div class="input-wrapper">
-                    <input type="range" id="in_reach_pct" min="1" max="100" step="1" oninput="syncInput('slide', this.id)">
-                    <input type="number" id="num_reach_pct" onchange="syncInput('num', 'in_reach_pct')">
-                </div>
-            </div>
-
-            <div class="input-row">
-                <div class="input-label"><span>Frequency</span></div>
-                <div class="input-wrapper">
-                    <input type="range" id="in_frequency" min="1" max="20" step="0.1" oninput="syncInput('slide', this.id)">
-                    <input type="number" id="num_frequency" onchange="syncInput('num', 'in_frequency')">
-                </div>
-            </div>
-
-            <div class="input-row">
-                <div class="input-label"><span>CPM ($)</span></div>
-                <div class="input-wrapper">
-                    <input type="range" id="in_cpm" min="5" max="300" step="1" oninput="syncInput('slide', this.id)">
-                    <input type="number" id="num_cpm" onchange="syncInput('num', 'in_cpm')">
+                    <input type="range" id="in_cpm" min="5" max="150" step="1" value="15" oninput="syncInput(this)">
+                    <input type="number" id="num_cpm" value="15" onchange="syncInput(this)">
                 </div>
             </div>
         </div>
 
-        <!-- Engagement & Funnel -->
         <div class="control-group">
-            <div class="control-group-title">Engagement & Conversion</div>
-            
+            <div class="control-group-title">Performance Inputs</div>
             <div class="input-row">
                 <div class="input-label"><span>CTR (%)</span></div>
                 <div class="input-wrapper">
-                    <input type="range" id="in_ctr" min="0.05" max="5" step="0.05" oninput="syncInput('slide', this.id)">
-                    <input type="number" id="num_ctr" onchange="syncInput('num', 'in_ctr')">
+                    <input type="range" id="in_ctr" min="0.1" max="3" step="0.05" value="0.5" oninput="syncInput(this)">
+                    <input type="number" id="num_ctr" value="0.5" onchange="syncInput(this)">
                 </div>
             </div>
-
             <div class="input-row">
-                <div class="input-label"><span>LP Conv Rate (%)</span></div>
+                <div class="input-label"><span>Form Completion Rate (%)</span></div>
                 <div class="input-wrapper">
-                    <input type="range" id="in_lp_cr" min="0.5" max="30" step="0.1" oninput="syncInput('slide', this.id)">
-                    <input type="number" id="num_lp_cr" onchange="syncInput('num', 'in_lp_cr')">
-                </div>
-            </div>
-
-            <div class="input-row">
-                <div class="input-label"><span>Lead to MQL (%)</span></div>
-                <div class="input-wrapper">
-                    <input type="range" id="in_l_mql" min="1" max="100" step="1" oninput="syncInput('slide', this.id)">
-                    <input type="number" id="num_l_mql" onchange="syncInput('num', 'in_l_mql')">
-                </div>
-            </div>
-
-            <div class="input-row">
-                <div class="input-label"><span>MQL to SQL (%)</span></div>
-                <div class="input-wrapper">
-                    <input type="range" id="in_mql_sql" min="1" max="100" step="1" oninput="syncInput('slide', this.id)">
-                    <input type="number" id="num_mql_sql" onchange="syncInput('num', 'in_mql_sql')">
-                </div>
-            </div>
-
-            <div class="input-row">
-                <div class="input-label"><span>SQL to Opp (%)</span></div>
-                <div class="input-wrapper">
-                    <input type="range" id="in_sql_opp" min="1" max="100" step="1" oninput="syncInput('slide', this.id)">
-                    <input type="number" id="num_sql_opp" onchange="syncInput('num', 'in_sql_opp')">
-                </div>
-            </div>
-
-             <div class="input-row">
-                <div class="input-label"><span>Win Rate (%)</span></div>
-                <div class="input-wrapper">
-                    <input type="range" id="in_win" min="1" max="80" step="1" oninput="syncInput('slide', this.id)">
-                    <input type="number" id="num_win" onchange="syncInput('num', 'in_win')">
+                    <input type="range" id="in_fcr" min="1" max="25" step="0.5" value="6.0" oninput="syncInput(this)">
+                    <input type="number" id="num_fcr" value="6.0" onchange="syncInput(this)">
                 </div>
             </div>
         </div>
 
-        <!-- Sales Economics -->
         <div class="control-group">
-            <div class="control-group-title">Economics</div>
-            
+            <div class="control-group-title">Sales Economics</div>
             <div class="input-row">
-                <div class="input-label"><span>Avg Deal Size ($)</span></div>
+                <div class="input-label"><span>Lead to Won Rate (%)</span></div>
                 <div class="input-wrapper">
-                    <input type="range" id="in_acv" min="1000" max="200000" step="1000" oninput="syncInput('slide', this.id)">
-                    <input type="number" id="num_acv" onchange="syncInput('num', 'in_acv')">
+                    <input type="range" id="in_win" min="1" max="50" step="1" value="10" oninput="syncInput(this)">
+                    <input type="number" id="num_win" value="10" onchange="syncInput(this)">
                 </div>
             </div>
-
             <div class="input-row">
-                <div class="input-label"><span>Sales Cycle (Months)</span></div>
+                <div class="input-label"><span>Avg. Deal Size ($)</span></div>
                 <div class="input-wrapper">
-                    <input type="range" id="in_cycle" min="1" max="24" step="1" oninput="syncInput('slide', this.id)">
-                    <input type="number" id="num_cycle" onchange="syncInput('num', 'in_cycle')">
+                    <input type="range" id="in_acv" min="1000" max="100000" step="1000" value="10000" oninput="syncInput(this)">
+                    <input type="number" id="num_acv" value="10000" onchange="syncInput(this)">
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- RIGHT PANEL: DASHBOARD -->
     <div class="main-content">
-        
-        <!-- Action Bar with AI Buttons -->
-        <div class="actions-bar">
-            <button class="btn btn-ai" onclick="generatePitch()">✨ Draft CFO Pitch</button>
-            <button class="btn btn-ai" onclick="generateCreative()">✨ Generate Creative</button>
-            <button class="btn btn-ai" onclick="generateChannelMix()">✨ Channel Mix</button>
-            <button class="btn btn-ai" onclick="generateLPCopy()">✨ LP Copy</button>
-            <button class="btn btn-outline" onclick="exportSummary()">📋 Copy Summary</button>
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+            <div class="view-toggle">
+                <div class="view-btn active" id="btn-mo" onclick="setView('monthly')">Monthly</div>
+                <div class="view-btn" id="btn-qt" onclick="setView('quarterly')">Quarterly</div>
+            </div>
+            <button class="btn-outline" style="padding: 8px 16px; border: 1px solid var(--border); border-radius: 6px; cursor: pointer; background: white;" onclick="copySummary()">📋 Copy Forecast</button>
         </div>
 
-        <!-- KPIs -->
         <div class="kpi-grid">
             <div class="kpi-card">
-                <div class="kpi-label">Forecasted Revenue</div>
-                <div class="kpi-value" id="out_revenue">$0</div>
-                <div class="kpi-sub positive" id="out_roas">0x ROAS</div>
+                <div class="kpi-label">Required Budget</div>
+                <div class="kpi-value" id="out_budget">$0</div>
+                <div class="kpi-sub" id="out_daily">Daily: $0</div>
             </div>
             <div class="kpi-card">
-                <div class="kpi-label">Closed Won Deals</div>
-                <div class="kpi-value" id="out_deals">0</div>
-                <div class="kpi-sub neutral" id="out_cpa">CPA: $0</div>
+                <div class="kpi-label">Market Reach</div>
+                <div class="kpi-value" id="out_reach">0</div>
+                <div class="kpi-sub">Members Targeted</div>
             </div>
             <div class="kpi-card">
-                <div class="kpi-label">Pipeline Created (Opp Value)</div>
-                <div class="kpi-value" id="out_pipeline">$0</div>
-                <div class="kpi-sub neutral" id="out_opps">0 Opportunities</div>
+                <div class="kpi-label">Est. Revenue</div>
+                <div class="kpi-value" id="out_rev">$0</div>
+                <div class="kpi-sub" id="out_roas">0x ROAS</div>
             </div>
             <div class="kpi-card">
-                <div class="kpi-label">Break-even / Payback</div>
-                <div class="kpi-value" id="out_payback">0 mo</div>
-                <div class="kpi-sub" id="out_breakeven_sub">Based on budget spend</div>
+                <div class="kpi-label">Unit Costs</div>
+                <div class="kpi-value" id="out_cpl">$0</div>
+                <div class="kpi-sub" id="out_cpc">CPC: $0</div>
             </div>
         </div>
 
-        <!-- Funnel Visualization -->
         <div class="section-card">
-            <div class="section-header">
-                <div class="section-title">Funnel Efficiency & Cost Analysis</div>
-                <div style="display:flex; align-items:center; gap: 12px;">
-                    <button class="btn btn-ai" style="padding: 4px 12px; font-size: 11px;" onclick="analyzeBottlenecks()">✨ Analyze Bottlenecks</button>
-                    <div class="section-title" style="font-size: 14px; color: var(--text-muted); font-weight: 400;">
-                        Total Spend: <span id="disp_spend" style="color:var(--text-main); font-weight:600;">$0</span>
-                    </div>
-                </div>
-            </div>
-
-            <div class="funnel-container" id="funnel_container">
-                <!-- JS Generates this -->
+            <h3 style="margin-top:0; font-size:16px;">Campaign Funnel Breakdown</h3>
+            <div id="funnel_container">
+                <!-- JS Populated -->
             </div>
         </div>
-
-        <!-- Methodology -->
-        <div class="methodology">
-            <details>
-                <summary>Methodology & Assumptions</summary>
-                <p>This model uses a linear deterministic funnel based on your inputs.</p>
-                <ul>
-                    <li><strong>Impressions:</strong> Calculated either by <code>Budget / CPM * 1000</code> or <code>Audience * Reach * Freq</code> depending on mode.</li>
-                    <li><strong>CTR to Wins:</strong> Standard waterfall: Impressions &rarr; Clicks &rarr; Leads &rarr; MQL &rarr; SQL &rarr; Opp &rarr; Won.</li>
-                    <li><strong>ROAS:</strong> Total Revenue / Total Ad Spend.</li>
-                    <li><strong>Payback Period:</strong> Budget / (Total Revenue / Sales Cycle Months). Determines how many months of revenue generation it takes to cover the ad spend.</li>
-                    <li><strong>Pipeline Value:</strong> Total Opportunities &times; Average Deal Size.</li>
-                    <li><strong>Brand vs Demand Mode:</strong> "Brand" presets favor high frequency/reach and lower CTR. "Demand" presets favor efficiency (CPC) and higher conversion rates.</li>
-                </ul>
-            </details>
-        </div>
-
     </div>
 </div>
 
-<!-- Modal Structure -->
-<div class="modal-overlay" id="aiModal">
+<div class="modal-overlay" id="modal">
     <div class="modal-card">
-        <div class="modal-header">
-            <div class="modal-title">
-                <span style="font-size: 20px;">✨</span> 
-                <span id="aiModalTitle">AI Assistant</span>
-            </div>
-            <button class="close-btn" onclick="closeModal()">×</button>
-        </div>
-        <div class="modal-body" id="aiModalBody">
-            <!-- Content goes here -->
-        </div>
-        <div class="modal-footer">
-            <button class="btn btn-outline" onclick="closeModal()">Close</button>
-            <button class="btn btn-primary" onclick="copyModalContent()" style="margin-left:8px;">Copy to Clipboard</button>
-        </div>
+        <h3>Summary Copied</h3>
+        <p style="color: var(--text-muted); font-size: 14px;">The budget recommendation has been copied to your clipboard.</p>
+        <button class="btn-primary" style="background: var(--primary); color: white; border: none; padding: 10px 20px; border-radius: 6px; cursor: pointer; width: 100%;" onclick="document.getElementById('modal').classList.remove('open')">Close</button>
     </div>
 </div>
 
 <script>
-    // --- Gemini API Config ---
-    const apiKey = ""; // Canvas will provide the key at runtime
+    let currentView = 'monthly';
 
-    /**
-     * Calls the Gemini API with a given prompt.
-     * Implements exponential backoff for retries.
-     * @param {string} prompt The user prompt to send to the model.
-     * @returns {Promise<string>} The generated text response.
-     */
-    async function callGemini(prompt) {
-        const model = 'gemini-2.5-flash-preview-09-2025';
-        const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`;
-        
-        const payload = {
-            contents: [{ parts: [{ text: prompt }] }]
-        };
-
-        const MAX_RETRIES = 5;
-        let delay = 1000;
-
-        for (let i = 0; i < MAX_RETRIES; i++) {
-            try {
-                const response = await fetch(apiUrl, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(payload)
-                });
-                
-                if (response.status === 429 && i < MAX_RETRIES - 1) {
-                    // Too many requests, retry with exponential backoff
-                    await new Promise(resolve => setTimeout(resolve, delay));
-                    delay *= 2;
-                    continue; // Go to the next iteration
-                }
-
-                if (!response.ok) throw new Error(`API call failed with status: ${response.status}`);
-                
-                const data = await response.json();
-                return data.candidates?.[0]?.content?.parts?.[0]?.text || "No response generated.";
-
-            } catch (error) {
-                console.error("Gemini API Error:", error);
-                if (i < MAX_RETRIES - 1) {
-                    await new Promise(resolve => setTimeout(resolve, delay));
-                    delay *= 2;
-                } else {
-                    return "Sorry, I encountered an error connecting to the AI service after several retries.";
-                }
-            }
-        }
-        return "Sorry, I encountered an error connecting to the AI service. Please try again.";
-    }
-
-    // --- AI Features ---
-
-    async function generatePitch() {
-        const spend = document.getElementById('disp_spend').innerText;
-        const rev = document.getElementById('out_revenue').innerText;
-        const roas = document.getElementById('out_roas').innerText;
-        const deals = document.getElementById('out_deals').innerText;
-        const opps = document.getElementById('out_opps').innerText;
-        const payback = document.getElementById('out_payback').innerText;
-        const duration = getVal('num_duration');
-        const mode = currentMode;
-
-        const prompt = `
-            Act as a Senior Director of B2B Marketing. 
-            Write a persuasive, concise email requesting budget approval for a new "${mode}" campaign.
-            
-            Use these forecasted metrics:
-            - Campaign Duration: ${duration} days
-            - Proposed Total Budget: ${spend}
-            - Forecasted Revenue: ${rev}
-            - Project ROAS: ${roas}
-            - New Deals: ${deals}
-            - Sales Pipeline Added: ${document.getElementById('out_pipeline').innerText}
-            - Payback Period: ${payback}
-            
-            Tone: Professional, confident, data-driven. Focus on the ROI and business impact. 
-            The output should be the body of the email, ready to send. Start with "Subject: High-ROI Budget Request for [Campaign Name]".
-        `;
-
-        openModal("Drafting CFO Email...");
-        const result = await callGemini(prompt);
-        updateModal("CFO Budget Pitch", result);
-    }
-
-    async function analyzeBottlenecks() {
-        // Gather current rates
-        const rates = {
-            ctr: getVal('num_ctr') + '%',
-            lp_conv: getVal('num_lp_cr') + '%',
-            lead_to_mql: getVal('num_l_mql') + '%',
-            mql_to_sql: getVal('num_mql_sql') + '%',
-            sql_to_opp: getVal('num_sql_opp') + '%',
-            win_rate: getVal('num_win') + '%',
-            cpm: getVal('num_cpm'),
-            avg_deal_size: getVal('num_acv')
-        };
-        
-        const mode = currentMode;
-
-        const prompt = `
-            Act as a B2B Growth Marketing expert. Analyze the following funnel metrics for a ${mode} strategy scenario. Assume these rates are based on your total ad budget.
-            
-            Conversion Rates:
-            - Ad CTR (Impressions to Click): ${rates.ctr}
-            - Landing Page Conversion (Click to Lead): ${rates.lp_conv}
-            - Lead to MQL: ${rates.lead_to_mql}
-            - MQL to SQL: ${rates.mql_to_sql}
-            - SQL to Opportunity: ${rates.sql_to_opp}
-            - Win Rate (Opportunity to Win): ${rates.win_rate}
-            
-            Economics:
-            - CPM: $${rates.cpm}
-            - Deal Size: $${rates.avg_deal_size}
-
-            Task:
-            1. Identify the single biggest bottleneck or area of concern in these conversion rates compared to best practices for B2B.
-            2. Suggest 3 specific, tactical and measurable experiments to improve that specific bottleneck.
-            3. Present the response clearly using bold headings, ensuring a maximum of 250 words.
-        `;
-
-        openModal("Analyzing Funnel Data...");
-        const result = await callGemini(prompt);
-        updateModal("Funnel Analysis & Tactics", result);
-    }
-
-    async function generateCreative() {
-        const mode = currentMode;
-        const acv = getVal('num_acv');
-        const cycle = getVal('num_cycle');
-        const cpm = getVal('num_cpm');
-        
-        const prompt = `
-            You are a world-class B2B Copywriter. 
-            
-            Based on the following media simulation inputs:
-            - Strategy: ${mode}
-            - Average Deal Size: $${acv}
-            - Sales Cycle: ${cycle} months
-            - CPM (Ad Quality proxy): $${cpm}
-
-            1. First, infer the type of product being sold (e.g., "High-volume productivity tool", "Enterprise security platform", "Mid-market HR software") based on the Deal Size and Sales Cycle.
-            2. Generate 3 distinct Ad Headlines and accompanying Value Propositions (Body Copy) that would work best for this specific product type and strategy.
-            
-            Format:
-            - **Inferred Product:** [Your inference]
-            - **Ad Concept 1:** [Headline] - [Body]
-            - **Ad Concept 2:** [Headline] - [Body]
-            - **Ad Concept 3:** [Headline] - [Body]
-        `;
-        
-        openModal("Brainstorming Ad Concepts...");
-        const result = await callGemini(prompt);
-        updateModal("AI Generated Creative Concepts", result);
-    }
-
-    async function generateChannelMix() {
-        const mode = currentMode;
-        const budget = document.getElementById('disp_spend').innerText;
-        const acv = getVal('num_acv');
-        const audience = getVal('num_audience');
-        const cpm = getVal('num_cpm');
-        const duration = getVal('num_duration');
-
-        const prompt = `
-            Act as a Senior Media Planner. 
-            
-            Based on the following scenario:
-            - Strategy Mode: ${mode}
-            - Total Budget: ${budget}
-            - Duration: ${duration} days
-            - Average Deal Size (ACV): $${acv}
-            - Audience Size: ${audience}
-            - CPM: $${cpm}
-
-            1. Infer the likely industry/vertical (e.g. Enterprise SaaS, PLG, Services) based on the Deal Size.
-            2. Recommend a percentage split of the budget across 3-4 specific advertising channels (e.g. LinkedIn, Meta, Google Search, G2/Capterra, Newsletters).
-            3. For each channel, explain *why* it fits this ACV and audience size.
-            
-            Format as a clear list or table. Keep it concise.
-        `;
-
-        openModal("Analyzing Channel Mix...");
-        const result = await callGemini(prompt);
-        updateModal("Recommended Channel Mix", result);
-    }
-
-    async function generateLPCopy() {
-        const mode = currentMode;
-        const acv = getVal('num_acv');
-        
-        const prompt = `
-            Act as a Conversion Rate Optimization (CRO) Expert.
-            
-            We are driving traffic for a ${mode} B2B campaign with a Deal Size of $${acv}.
-            
-            Generate the copy for the Landing Page Hero Section that matches this campaign.
-            
-            Include:
-            1. **H1 Headline:** High impact, benefit-driven.
-            2. **Subheadline:** Explains the "How" and builds trust.
-            3. **Primary CTA Button:** Specific to the deal size (e.g. "Book Demo" vs "Start Free Trial").
-            4. **Social Proof Placeholder:** Suggest what kind of proof is needed (e.g. "Logos of Fortune 500s" or "User Review Stars").
-        `;
-
-        openModal("Writing Landing Page Copy...");
-        const result = await callGemini(prompt);
-        updateModal("Landing Page Copy Draft", result);
-    }
-
-    // --- Modal Logic ---
-    let isModalOpen = false;
-
-    function openModal(initialText) {
-        isModalOpen = true;
-        document.getElementById('aiModal').classList.add('open');
-        document.getElementById('aiModalTitle').innerText = "AI Assistant";
-        document.getElementById('aiModalBody').innerHTML = `
-            <div style="display:flex; flex-direction:column; align-items:center; justify-content:center; padding: 40px;">
-                <div class="loading-spinner"></div>
-                <p style="margin-top:16px; color:var(--text-muted);">${initialText}</p>
-            </div>
-        `;
-    }
-
-    function updateModal(title, content) {
-        if (!isModalOpen) return;
-        document.getElementById('aiModalTitle').innerText = title;
-        // Simple markdown parsing for bolding and lists
-        const formatted = content
-            .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
-            .replace(/\n\s*-\s/g, '<br>&bull; ')
-            .replace(/\n\n/g, '<br><br>')
-            .replace(/\n/g, '<br>');
-            
-        document.getElementById('aiModalBody').innerHTML = formatted;
-    }
-
-    function closeModal() {
-        isModalOpen = false;
-        document.getElementById('aiModal').classList.remove('open');
-    }
-
-    function copyModalContent() {
-        const text = document.getElementById('aiModalBody').innerText;
-        navigator.clipboard.writeText(text).then(() => {
-            const btn = document.querySelector('.modal-footer .btn-primary');
-            const original = btn.innerText;
-            btn.innerText = "Copied!";
-            setTimeout(() => btn.innerText = original, 2000);
-        });
-    }
-
-    // --- State Management ---
-    const presets = {
-        saas_mid: {
-            audience: 250000, reach_pct: 20, frequency: 3, budget: 15000,
-            cpm: 25, ctr: 0.8, lp_cr: 8.0, 
-            l_mql: 40, mql_sql: 30, sql_opp: 25, win: 20,
-            acv: 12000, cycle: 6, duration: 90
-        },
-        saas_ent: {
-            audience: 50000, reach_pct: 40, frequency: 5, budget: 25000,
-            cpm: 60, ctr: 0.4, lp_cr: 5.0, 
-            l_mql: 60, mql_sql: 40, sql_opp: 30, win: 25,
-            acv: 65000, cycle: 9, duration: 180
-        },
-        saas_smb: {
-            audience: 1000000, reach_pct: 10, frequency: 2, budget: 10000,
-            cpm: 12, ctr: 1.2, lp_cr: 12.0, 
-            l_mql: 20, mql_sql: 20, sql_opp: 20, win: 15,
-            acv: 2500, cycle: 1, duration: 30
-        }
-    };
-
-    let currentMode = 'Brand'; // Brand, Mixed, Demand
-    let solveFor = 'budget'; // budget, reach
-
-    // --- Core Logic ---
-
-    function getVal(id) {
-        return parseFloat(document.getElementById(id).value) || 0;
-    }
-
-    /**
-     * Sets the value for both the range ('in_') and number ('num_') inputs based on the base ID.
-     * Fixes the initial TypeError by robustly checking for elements.
-     * @param {string} id - The base ID of the input (e.g., 'audience', not 'num_audience')
-     * @param {number} val - The numeric value to set
-     */
-    function setVal(id, val) {
-        const elIn = document.getElementById('in_' + id);
-        const elNum = document.getElementById('num_' + id);
-
-        // Handle floating point precision for display
-        let displayVal = val;
-        if(val < 1 && val > 0) displayVal = val.toFixed(2);
-        else if (val % 1 !== 0) displayVal = val.toFixed(1);
-        else displayVal = Math.round(val);
-        
-        if (elIn) elIn.value = displayVal;
-        if (elNum) elNum.value = displayVal;
-    }
-
-    // Sync Slider and Number inputs
-    function syncInput(sourceType, id) {
-        const baseId = id.replace('in_', '').replace('num_', '');
-        const slider = document.getElementById('in_' + baseId);
-        const number = document.getElementById('num_' + baseId);
-
-        if (sourceType === 'num') {
-            if(slider && number) slider.value = number.value;
-        } else {
-            if(slider && number) number.value = slider.value;
-        }
+    function syncInput(el) {
+        const baseId = el.id.replace('in_', '').replace('num_', '');
+        document.getElementById('in_' + baseId).value = el.value;
+        document.getElementById('num_' + baseId).value = el.value;
         update();
     }
 
-    // Initialize with a preset
-    function applyPreset() {
-        const key = document.getElementById('presetSelect').value;
-        if(key === 'custom') {
-            update();
-            return;
-        }
-
-        const p = presets[key];
-        
-        // Map preset values to inputs using the robust setVal function
-        setVal('audience', p.audience);
-        setVal('duration', p.duration);
-        setVal('reach_pct', p.reach_pct);
-        setVal('frequency', p.frequency);
-        setVal('budget', p.budget);
-        setVal('cpm', p.cpm);
-        setVal('ctr', p.ctr);
-        setVal('lp_cr', p.lp_cr);
-        setVal('l_mql', p.l_mql);
-        setVal('mql_sql', p.mql_sql);
-        setVal('sql_opp', p.sql_opp);
-        setVal('win', p.win);
-        setVal('acv', p.acv);
-        setVal('cycle', p.cycle);
-
+    function setView(v) {
+        currentView = v;
+        document.getElementById('btn-mo').classList.toggle('active', v === 'monthly');
+        document.getElementById('btn-qt').classList.toggle('active', v === 'quarterly');
         update();
     }
 
-    function setMode(mode) {
-        currentMode = mode;
-        // Visual toggle update
-        ['Brand', 'Mixed', 'Demand'].forEach(m => {
-            document.getElementById('mode'+m).classList.remove('active');
-        });
-        document.getElementById('mode'+mode).classList.add('active');
-        update();
-    }
-
-    function toggleBudgetMode() {
-        solveFor = document.getElementById('solveMode').value;
-        const budgetWrapper = document.getElementById('wrapper_budget');
-        const reachWrapper = document.getElementById('wrapper_reach');
-
-        if(solveFor === 'budget') {
-            budgetWrapper.style.display = 'flex';
-            reachWrapper.style.display = 'none';
-        } else {
-            budgetWrapper.style.display = 'none';
-            reachWrapper.style.display = 'flex';
-        }
-        update();
-    }
-
-    // The Main Calculation Engine
     function update() {
-        // 1. Gather Inputs
-        const audience = getVal('num_audience');
-        const freq = getVal('num_frequency');
-        const cpm = getVal('num_cpm');
-        const duration = getVal('num_duration');
+        // Inputs
+        const audience = parseFloat(document.getElementById('num_audience').value);
+        const freq = parseFloat(document.getElementById('num_freq').value);
+        const cpm = parseFloat(document.getElementById('num_cpm').value);
+        const ctr = parseFloat(document.getElementById('num_ctr').value) / 100;
+        const fcr = parseFloat(document.getElementById('num_fcr').value) / 100;
+        const win = parseFloat(document.getElementById('num_win').value) / 100;
+        const acv = parseFloat(document.getElementById('num_acv').value);
+
+        // Core Calculation (Monthly base)
+        const reachTarget = 0.9; // competitive baseline from your sheet
+        const reachedMembers = audience * reachTarget;
+        const monthlyImpressions = reachedMembers * freq;
+        const monthlyBudget = (monthlyImpressions / 1000) * cpm;
         
-        // Funnel Rates
-        const ctr = getVal('num_ctr') / 100;
-        const lp_cr = getVal('num_lp_cr') / 100;
-        const l_mql = getVal('num_l_mql') / 100;
-        const mql_sql = getVal('num_mql_sql') / 100;
-        const sql_opp = getVal('num_sql_opp') / 100;
-        const win_rate = getVal('num_win') / 100;
-        
-        const acv = getVal('num_acv');
-        const cycle = getVal('num_cycle');
-
-        let budget = 0;
-        let impressions = 0;
-        let reach = 0;
-
-        // 2. Calculate Top of Funnel based on Mode
-        if (solveFor === 'budget') {
-            budget = getVal('num_budget');
-            // Imp = Budget / (CPM/1000)
-            const cpmUnit = cpm / 1000;
-            impressions = cpmUnit > 0 ? (budget / cpmUnit) : 0;
-            // Reach = Imp / Freq
-            reach = freq > 0 ? impressions / freq : impressions;
-            // Cap reach at audience size
-            if(reach > audience) reach = audience; 
-        } else {
-            // Solve for Reach
-            const reachPct = getVal('num_reach_pct') / 100;
-            reach = audience * reachPct;
-            impressions = reach * freq;
-            budget = (impressions / 1000) * cpm;
-        }
-
-        // Calculate Monthly Spend Pace
-        const monthlyPace = duration > 0 ? (budget / (duration / 30)) : budget;
-        document.getElementById('helper_spend_pace').innerText = `Est. Monthly Spend: ${new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 }).format(monthlyPace)}`;
-
-        // 3. Waterfall Calculations
-        const clicks = impressions * ctr;
-        const leads = clicks * lp_cr;
-        const mqls = leads * l_mql;
-        const sqls = mqls * mql_sql;
-        const opps = sqls * sql_opp;
-        const deals = opps * win_rate;
+        // Scale by view
+        const scale = (currentView === 'quarterly') ? 3 : 1;
+        const budget = monthlyBudget * scale;
+        const imps = monthlyImpressions * scale;
+        const clicks = imps * ctr;
+        const leads = clicks * fcr;
+        const deals = leads * win;
         const revenue = deals * acv;
-        const pipelineVal = opps * acv;
 
-        // 4. Financials
-        const roas = budget > 0 ? (revenue / budget) : 0;
-        // Payback: Budget / (Revenue / Cycle) -> Months to pay back
-        const monthlyRev = cycle > 0 ? revenue / cycle : revenue;
-        const payback = monthlyRev > 0 ? (budget / monthlyRev) : 0;
-
-        // Unit Costs (avoid division by zero)
+        // Efficiency
         const cpc = clicks > 0 ? budget / clicks : 0;
         const cpl = leads > 0 ? budget / leads : 0;
-        const cpo = opps > 0 ? budget / opps : 0;
-        const cpa = deals > 0 ? budget / deals : 0;
+        const roas = budget > 0 ? revenue / budget : 0;
 
-        // 5. Update UI Text
-        const fmt = (num) => new Intl.NumberFormat('en-US', { maximumFractionDigits: 0 }).format(Math.floor(num));
-        const fmtCur = (num) => new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 }).format(num);
+        // Display
+        document.getElementById('out_budget').innerText = `$${Math.round(budget).toLocaleString()}`;
+        document.getElementById('out_daily').innerText = `Daily: $${Math.round(budget / (scale * 30)).toLocaleString()}`;
+        document.getElementById('out_reach').innerText = Math.round(reachedMembers).toLocaleString();
+        document.getElementById('out_rev').innerText = `$${Math.round(revenue).toLocaleString()}`;
+        document.getElementById('out_roas').innerText = `${roas.toFixed(1)}x ROAS`;
+        document.getElementById('out_cpl').innerText = `$${Math.round(cpl).toLocaleString()}`;
+        document.getElementById('out_cpc').innerText = `CPC: $${cpc.toFixed(2)}`;
 
-        document.getElementById('out_revenue').innerText = fmtCur(revenue);
-        document.getElementById('out_roas').innerText = roas.toFixed(2) + 'x ROAS';
-        document.getElementById('out_roas').className = roas >= 1 ? 'kpi-sub positive' : 'kpi-sub negative';
-        
-        document.getElementById('out_deals').innerText = fmt(deals);
-        document.getElementById('out_cpa').innerText = 'CAC: ' + fmtCur(cpa);
-
-        document.getElementById('out_pipeline').innerText = fmtCur(pipelineVal);
-        document.getElementById('out_opps').innerText = fmt(opps) + ' Opportunities';
-
-        document.getElementById('out_payback').innerText = payback.toFixed(1) + ' mo';
-        document.getElementById('disp_spend').innerText = fmtCur(budget);
-        
-        // Update audience size display
-        document.getElementById('val_audience').innerText = fmt(audience);
-
-
-        // 6. Render Funnel
         renderFunnel([
-            { name: 'Impressions', count: impressions, cost: cpm/1000, costLabel: 'CPM Unit' },
-            { name: 'Clicks', count: clicks, cost: cpc, costLabel: 'CPC' },
-            { name: 'Leads', count: leads, cost: cpl, costLabel: 'CPL' },
-            { name: 'MQLs', count: mqls, cost: budget/mqls, costLabel: 'Cost/MQL' },
-            { name: 'SQLs', count: sqls, cost: budget/sqls, costLabel: 'Cost/SQL' },
-            { name: 'Opportunities', count: opps, cost: cpo, costLabel: 'Cost/Opp' },
-            { name: 'Wins', count: deals, cost: cpa, costLabel: 'CAC' },
+            { name: 'Impressions', val: imps },
+            { name: 'Clicks', val: clicks },
+            { name: 'Leads (Gen Forms)', val: leads },
+            { name: 'Closed Won', val: deals }
         ]);
     }
 
     function renderFunnel(steps) {
         const container = document.getElementById('funnel_container');
         container.innerHTML = '';
-        const maxCount = steps[0].count; // To scale bars
-
-        steps.forEach((step, index) => {
-            const pctOfMax = maxCount > 0 ? (step.count / maxCount) * 100 : 0;
-            const costStr = isFinite(step.cost) && step.cost > 0 ? `$${step.cost.toFixed(2)}` : '-';
-            
-            const html = `
+        const max = steps[0].val;
+        steps.forEach(s => {
+            const pct = max > 0 ? (s.val / max) * 100 : 0;
+            container.innerHTML += `
                 <div class="funnel-step">
-                    <div class="funnel-name">${step.name}</div>
-                    <div class="funnel-visual-container">
-                        <div class="funnel-bar-bg"></div>
-                        <div class="funnel-bar" style="width: ${Math.max(pctOfMax, 1)}%"></div>
-                    </div>
-                    <div class="funnel-count">${new Intl.NumberFormat('en-US', { maximumFractionDigits: 0 }).format(Math.floor(step.count))}</div>
-                    <div class="funnel-cost">${costStr} ${step.costLabel}</div>
+                    <div class="funnel-name">${s.name}</div>
+                    <div class="funnel-bar-bg"><div class="funnel-bar" style="width:${pct}%"></div></div>
+                    <div class="funnel-count">${Math.round(s.val).toLocaleString()}</div>
                 </div>
             `;
-            container.innerHTML += html;
         });
     }
 
-    function exportSummary() {
-        const rev = document.getElementById('out_revenue').innerText;
-        const spend = document.getElementById('disp_spend').innerText;
-        const roas = document.getElementById('out_roas').innerText;
-        const deals = document.getElementById('out_deals').innerText;
-        const payback = document.getElementById('out_payback').innerText;
-        const duration = getVal('num_duration');
-
-        const text = `
-Pipeline Forecast Summary
--------------------------
-Mode: ${currentMode}
-Duration: ${duration} Days
-Total Budget: ${spend}
-Forecasted Revenue: ${rev} (${roas})
-Closed Won Deals: ${deals}
-Pipeline Value: ${document.getElementById('out_pipeline').innerText}
-Sales Cycle Payback: ${payback}
-
-Generated via B2B Pipeline Simulator
-        `.trim();
-
-        // Use document.execCommand('copy') for better compatibility in iframe environments
-        const tempTextArea = document.createElement('textarea');
-        tempTextArea.value = text;
-        document.body.appendChild(tempTextArea);
-        tempTextArea.select();
-        document.execCommand('copy');
-        document.body.removeChild(tempTextArea);
-
-        // Instead of alert(), use the modal for feedback
-        document.getElementById('aiModalTitle').innerText = "Summary Copied";
-        document.getElementById('aiModalBody').innerHTML = `<p style="text-align:center;">The forecast summary has been copied to your clipboard. Ready to share!</p>`;
-        document.querySelector('.modal-footer .btn-primary').style.display = 'none';
-        document.getElementById('aiModal').classList.add('open');
-        setTimeout(() => {
-            closeModal();
-            document.querySelector('.modal-footer .btn-primary').style.display = 'inline-flex';
-        }, 2000);
-    }
-
-    // Init
-    window.onload = function() {
-        // Synchronize all range inputs with their number counterparts on load
-        document.querySelectorAll('input[type=range]').forEach(el => {
-            // Need to set number input value first to ensure it's loaded before update()
-            const baseId = el.id.replace('in_', '');
-            const numEl = document.getElementById('num_' + baseId);
-            if (numEl) {
-                numEl.value = el.value;
-            }
-        });
+    function copySummary() {
+        const budget = document.getElementById('out_budget').innerText;
+        const leads = document.getElementById('funnel_container').children[2].querySelector('.funnel-count').innerText;
+        const rev = document.getElementById('out_rev').innerText;
+        const text = `Forecast (${currentView}): Budget ${budget} | Est. Leads: ${leads} | Est. Revenue: ${rev}`;
         
-        applyPreset(); // Load initial state and run first calculation
-    };
+        const el = document.createElement('textarea');
+        el.value = text;
+        document.body.appendChild(el);
+        el.select();
+        document.execCommand('copy');
+        document.body.removeChild(el);
+        document.getElementById('modal').classList.add('open');
+    }
 
+    window.onload = update;
 </script>
-
 </body>
 </html>
