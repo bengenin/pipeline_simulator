@@ -153,17 +153,51 @@
                 </div>
             </div>
             <div class="input-row">
+                <div class="input-label"><span>Frequency (per month)</span></div>
+                <div class="input-wrapper">
+                    <input type="range" id="in_freq" min="1" max="20" step="1" value="4" oninput="syncInput(this)">
+                    <input type="number" id="num_freq" value="4" onchange="syncInput(this)">
+                </div>
+            </div>
+            <div class="input-row">
                 <div class="input-label"><span>CTR (%)</span></div>
                 <div class="input-wrapper">
-                    <input type="range" id="in_ctr" min="0.1" max="2" step="0.05" value="0.5" oninput="syncInput(this)">
+                    <input type="range" id="in_ctr" min="0.1" max="5" step="0.05" value="0.5" oninput="syncInput(this)">
                     <input type="number" id="num_ctr" value="0.5" onchange="syncInput(this)">
                 </div>
             </div>
             <div class="input-row">
                 <div class="input-label"><span>Form Fill Rate (%)</span></div>
                 <div class="input-wrapper">
-                    <input type="range" id="in_fcr" min="1" max="20" step="0.5" value="6.0" oninput="syncInput(this)">
+                    <input type="range" id="in_fcr" min="1" max="30" step="0.5" value="6.0" oninput="syncInput(this)">
                     <input type="number" id="num_fcr" value="6.0" onchange="syncInput(this)">
+                </div>
+            </div>
+        </div>
+
+        <div class="control-group">
+            <div class="control-group-title">Cost Drivers</div>
+            <div class="input-row">
+                <div class="input-label"><span>Pricing Model</span></div>
+                <div class="input-wrapper" style="justify-content: flex-end;">
+                    <select id="pricing_model" onchange="togglePricingInput()" style="width: 100%; padding: 6px; border: 1px solid var(--border); border-radius: 6px; font-size: 13px;">
+                        <option value="cpm">CPM Based</option>
+                        <option value="cpc">CPC Based</option>
+                    </select>
+                </div>
+            </div>
+            <div class="input-row" id="row_cpm">
+                <div class="input-label"><span>Avg. CPM ($)</span></div>
+                <div class="input-wrapper">
+                    <input type="range" id="in_cpm" min="5" max="200" step="1" value="15" oninput="syncInput(this)">
+                    <input type="number" id="num_cpm" value="15" onchange="syncInput(this)">
+                </div>
+            </div>
+            <div class="input-row" id="row_cpc" style="display:none;">
+                <div class="input-label"><span>Avg. CPC ($)</span></div>
+                <div class="input-wrapper">
+                    <input type="range" id="in_cpc_input" min="0.5" max="50" step="0.1" value="3" oninput="syncInput(this)">
+                    <input type="number" id="num_cpc_input" value="3" onchange="syncInput(this)">
                 </div>
             </div>
         </div>
@@ -209,13 +243,6 @@
                     <input type="number" id="num_acv" value="15000" onchange="syncInput(this)">
                 </div>
             </div>
-            <div class="input-row">
-                <div class="input-label"><span>Avg. CPM ($)</span></div>
-                <div class="input-wrapper">
-                    <input type="range" id="in_cpm" min="5" max="150" step="1" value="15" oninput="syncInput(this)">
-                    <input type="number" id="num_cpm" value="15" onchange="syncInput(this)">
-                </div>
-            </div>
         </div>
     </div>
 
@@ -225,9 +252,9 @@
                 <div class="view-btn active" id="btn-mo" onclick="setView('monthly')">Monthly View</div>
                 <div class="view-btn" id="btn-qt" onclick="setView('quarterly')">Quarterly View</div>
             </div>
-            <div style="font-size: 13px; font-weight: 600; color: var(--text-muted);">
-                Frequency: 4x Monthly
-            </div>
+            <button class="btn-primary" style="background: white; color: var(--primary); border: 1px solid var(--primary); padding: 8px 16px; border-radius: 6px; cursor: pointer; font-size: 13px;" onclick="exportToCSV()">
+                Download Excel (CSV)
+            </button>
         </div>
 
         <div class="kpi-grid">
@@ -265,16 +292,21 @@
     </div>
 </div>
 
-<div class="modal-overlay" id="modal">
-    <div class="modal-card">
-        <h3>Analysis Copied</h3>
-        <p style="color: var(--text-muted); font-size: 14px;">The full bottleneck analysis is ready for your report.</p>
-        <button class="btn-primary" style="background: var(--primary); color: white; border: none; padding: 10px 20px; border-radius: 6px; cursor: pointer; width: 100%;" onclick="document.getElementById('modal').classList.remove('open')">Close</button>
-    </div>
-</div>
-
 <script>
     let currentView = 'monthly';
+    let currentPricingModel = 'cpm';
+
+    function togglePricingInput() {
+        currentPricingModel = document.getElementById('pricing_model').value;
+        if (currentPricingModel === 'cpm') {
+            document.getElementById('row_cpm').style.display = 'flex';
+            document.getElementById('row_cpc').style.display = 'none';
+        } else {
+            document.getElementById('row_cpm').style.display = 'none';
+            document.getElementById('row_cpc').style.display = 'flex';
+        }
+        update();
+    }
 
     function syncInput(el) {
         const baseId = el.id.replace('in_', '').replace('num_', '');
@@ -300,9 +332,9 @@
         // Inputs
         const audience = parseFloat(document.getElementById('num_audience').value);
         const reachPct = parseFloat(document.getElementById('num_reach_pct').value) / 100;
+        const freq = parseFloat(document.getElementById('num_freq').value);
         const ctr = parseFloat(document.getElementById('num_ctr').value) / 100;
         const fcr = parseFloat(document.getElementById('num_fcr').value) / 100;
-        const cpm = parseFloat(document.getElementById('num_cpm').value);
         const acv = parseFloat(document.getElementById('num_acv').value);
 
         // Sales Stage Rates
@@ -311,15 +343,12 @@
         const r_opp = parseFloat(document.getElementById('num_opp').value) / 100;
         const r_win = parseFloat(document.getElementById('num_win').value) / 100;
 
-        // Base Monthly Calculation (Assume 4x Frequency for LinkedIn/Meta baseline)
-        const freq = 4;
+        // Base Calculations
         const reachedMembers = audience * reachPct;
         const monthlyImpressions = reachedMembers * freq;
-        const monthlyBudget = (monthlyImpressions / 1000) * cpm;
         
         // Scale factor
         const scale = (currentView === 'quarterly') ? 3 : 1;
-        const budget = monthlyBudget * scale;
         const imps = monthlyImpressions * scale;
 
         // Funnel Math
@@ -331,8 +360,24 @@
         const deals = opps * r_win;
         const revenue = deals * acv;
 
+        // Budget Calculation based on Pricing Model
+        let budget = 0;
+        let effective_cpc = 0;
+        let effective_cpm = 0;
+
+        if (currentPricingModel === 'cpm') {
+            const input_cpm = parseFloat(document.getElementById('num_cpm').value);
+            budget = (imps / 1000) * input_cpm;
+            effective_cpc = clicks > 0 ? budget / clicks : 0;
+            effective_cpm = input_cpm;
+        } else {
+            const input_cpc = parseFloat(document.getElementById('num_cpc_input').value);
+            budget = clicks * input_cpc;
+            effective_cpc = input_cpc;
+            effective_cpm = imps > 0 ? (budget / imps) * 1000 : 0;
+        }
+
         // Efficiency
-        const cpc = clicks > 0 ? budget / clicks : 0;
         const cpl = leads > 0 ? budget / leads : 0;
         const cac = deals > 0 ? budget / deals : 0;
         const roas = budget > 0 ? revenue / budget : 0;
@@ -340,7 +385,7 @@
 
         // Display
         document.getElementById('out_budget').innerText = `$${Math.round(budget).toLocaleString()}`;
-        document.getElementById('out_cpc').innerText = `CPC: $${cpc.toFixed(2)}`;
+        document.getElementById('out_cpc').innerText = `CPC: $${effective_cpc.toFixed(2)}`;
         
         document.getElementById('out_rev').innerText = `$${Math.round(revenue).toLocaleString()}`;
         document.getElementById('out_roas').innerText = `${roas.toFixed(1)}x ROAS`;
@@ -381,6 +426,42 @@
                 </div>
             `;
         });
+    }
+
+    function exportToCSV() {
+        const rows = [
+            ["Metric", "Value", "Unit"],
+            ["Forecast View", currentView, ""],
+            ["Required Budget", document.getElementById('out_budget').innerText.replace('$','').replace(/,/g,''), "USD"],
+            ["Estimated Revenue", document.getElementById('out_rev').innerText.replace('$','').replace(/,/g,''), "USD"],
+            ["ROAS", document.getElementById('out_roas').innerText.replace('x ROAS',''), "x"],
+            ["Cost Per Lead", document.getElementById('out_cpl').innerText.replace('CPL: $','').replace(/,/g,''), "USD"],
+            ["Cost Per Acquisition", document.getElementById('out_cac').innerText.replace('$','').replace(/,/g,''), "USD"],
+            ["CPC", document.getElementById('out_cpc').innerText.replace('CPC: $',''), "USD"],
+            [],
+            ["Funnel Stage", "Count", "Rate"],
+        ];
+
+        const funnelSteps = document.querySelectorAll('.funnel-step');
+        funnelSteps.forEach(step => {
+            const name = step.querySelector('.funnel-name').innerText.split('\n')[0];
+            const count = step.querySelector('.funnel-count').innerText.replace(/,/g,'');
+            const meta = step.querySelector('div[style*="color:var(--text-muted)"]').innerText;
+            rows.push([name, count, meta]);
+        });
+
+        let csvContent = "data:text/csv;charset=utf-8,";
+        rows.forEach(row => {
+            csvContent += row.join(",") + "\r\n";
+        });
+
+        const encodedUri = encodeURI(csvContent);
+        const link = document.createElement("a");
+        link.setAttribute("href", encodedUri);
+        link.setAttribute("download", "pipeline_forecast.csv");
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
     }
 
     window.onload = update;
