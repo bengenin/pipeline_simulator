@@ -179,7 +179,15 @@
 
         <div class="control-group">
             <div class="control-group-title">Cost Drivers</div>
-            <!-- Both CPM and CPC active -->
+            <div class="input-row">
+                <div class="input-label"><span>Pricing Model</span></div>
+                <div class="input-wrapper" style="justify-content: flex-end;">
+                    <select id="pricing_model" onchange="togglePricingInput()" style="width: 100%; padding: 6px; border: 1px solid var(--border); border-radius: 6px; font-size: 13px;">
+                        <option value="cpm">CPM Based</option>
+                        <option value="cpc">CPC Based</option>
+                    </select>
+                </div>
+            </div>
             <div class="input-row" id="row_cpm">
                 <div class="input-label"><span>Avg. CPM ($)</span></div>
                 <div class="input-wrapper">
@@ -187,7 +195,7 @@
                     <input type="number" id="num_cpm" value="15" onchange="syncInput(this)">
                 </div>
             </div>
-            <div class="input-row" id="row_cpc">
+            <div class="input-row" id="row_cpc" style="display:none;">
                 <div class="input-label"><span>Avg. CPC ($)</span></div>
                 <div class="input-wrapper">
                     <input type="range" id="in_cpc_input" min="0.5" max="50" step="0.1" value="3" oninput="syncInput(this)">
@@ -288,6 +296,19 @@
 
 <script>
     let currentView = 'monthly';
+    let currentPricingModel = 'cpm';
+
+    function togglePricingInput() {
+        currentPricingModel = document.getElementById('pricing_model').value;
+        if (currentPricingModel === 'cpm') {
+            document.getElementById('row_cpm').style.display = 'flex';
+            document.getElementById('row_cpc').style.display = 'none';
+        } else {
+            document.getElementById('row_cpm').style.display = 'none';
+            document.getElementById('row_cpc').style.display = 'flex';
+        }
+        update();
+    }
 
     function syncInput(el) {
         const baseId = el.id.replace('in_', '').replace('num_', '');
@@ -341,25 +362,19 @@
         const deals = opps * r_win;
         const revenue = deals * acv;
 
-        // Budget Calculation - Blended CPM and CPC logic
-        // We sum both cost components: (Impressions * CPM) + (Clicks * CPC)
-        const input_cpm = parseFloat(document.getElementById('num_cpm').value);
-        const input_cpc = parseFloat(document.getElementById('num_cpc_input').value);
+        // Budget Calculation based on Pricing Model
+        let budget = 0;
+        let effective_cpc = 0;
         
-        // Cost from Impressions (CPM based)
-        const cost_from_cpm = (imps / 1000) * input_cpm;
-        
-        // Cost from Clicks (CPC based)
-        const cost_from_cpc = clicks * input_cpc;
-        
-        // Total Budget is sum of both components (or whichever dominates, but here we sum as requested to add both)
-        // However, usually it's one or the other. If user wants BOTH, we add them. 
-        // If the intent is to use one as a proxy for the other, they should zero one out.
-        // Let's assume additive for now as per "add both".
-        const budget = cost_from_cpm + cost_from_cpc;
-
-        // Derived Metrics
-        const blended_cpc = clicks > 0 ? budget / clicks : 0;
+        if (currentPricingModel === 'cpm') {
+            const input_cpm = parseFloat(document.getElementById('num_cpm').value);
+            budget = (imps / 1000) * input_cpm;
+            effective_cpc = clicks > 0 ? budget / clicks : 0;
+        } else {
+            const input_cpc = parseFloat(document.getElementById('num_cpc_input').value);
+            budget = clicks * input_cpc;
+            effective_cpc = input_cpc;
+        }
 
         // Efficiency
         const cpl = leads > 0 ? budget / leads : 0;
@@ -369,7 +384,7 @@
 
         // Display
         document.getElementById('out_budget').innerText = `$${Math.round(budget).toLocaleString()}`;
-        document.getElementById('out_cpc').innerText = `Blended CPC: $${blended_cpc.toFixed(2)}`;
+        document.getElementById('out_cpc').innerText = `Blended CPC: $${effective_cpc.toFixed(2)}`;
         
         document.getElementById('out_rev').innerText = `$${Math.round(revenue).toLocaleString()}`;
         document.getElementById('out_roas').innerText = `${roas.toFixed(1)}x ROAS`;
