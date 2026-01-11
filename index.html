@@ -114,7 +114,7 @@
         }
         .funnel-name { font-size: 13px; font-weight: 600; }
         .funnel-bar-bg { height: 10px; background: #F3F4F6; border-radius: 5px; position: relative; margin: 0 20px; overflow: hidden; }
-        .funnel-bar { height: 100%; background: var(--primary); border-radius: 5px; transition: width 0.4s ease; }
+        .funnel-bar { height: 100%; background: var(--primary); border-radius: 5px; transition: width 0.4s ease; min-width: 4px; }
         .funnel-count { font-size: 14px; font-weight: 700; text-align: right; }
 
         .tag { font-size: 10px; padding: 2px 6px; border-radius: 4px; font-weight: 700; text-transform: uppercase; margin-left: 8px; }
@@ -263,7 +263,7 @@
             <div class="kpi-card">
                 <div class="kpi-label">Required Budget</div>
                 <div class="kpi-value" id="out_budget">$0</div>
-                <div class="kpi-sub" id="out_cpc">Blended CPC: $0.00</div>
+                <div class="kpi-sub" id="out_cpc_disp">Based on Model</div>
             </div>
             <div class="kpi-card">
                 <div class="kpi-label">Est. Revenue</div>
@@ -285,7 +285,7 @@
         <div class="section-card">
             <h3 style="margin-top:0; font-size:16px; display: flex; align-items: center; justify-content: space-between;">
                 Full Customer Journey Funnel
-                <span style="font-size: 11px; color: var(--text-muted); font-weight: normal;">Hover steps for stage-gate efficiency</span>
+                <span style="font-size: 11px; color: var(--text-muted); font-weight: normal;">Logarithmic Scale</span>
             </h3>
             <div id="funnel_container">
                 <!-- JS Populated -->
@@ -364,16 +364,17 @@
 
         // Budget Calculation based on Pricing Model
         let budget = 0;
-        let effective_cpc = 0;
+        let cpc_display = 0;
         
         if (currentPricingModel === 'cpm') {
             const input_cpm = parseFloat(document.getElementById('num_cpm').value);
             budget = (imps / 1000) * input_cpm;
-            effective_cpc = clicks > 0 ? budget / clicks : 0;
+            cpc_display = clicks > 0 ? budget / clicks : 0;
+            document.getElementById('out_cpc_disp').innerText = `Implied CPC: $${cpc_display.toFixed(2)}`;
         } else {
             const input_cpc = parseFloat(document.getElementById('num_cpc_input').value);
             budget = clicks * input_cpc;
-            effective_cpc = input_cpc;
+            document.getElementById('out_cpc_disp').innerText = `Target CPC: $${input_cpc.toFixed(2)}`;
         }
 
         // Efficiency
@@ -384,14 +385,10 @@
 
         // Display
         document.getElementById('out_budget').innerText = `$${Math.round(budget).toLocaleString()}`;
-        document.getElementById('out_cpc').innerText = `Blended CPC: $${effective_cpc.toFixed(2)}`;
-        
         document.getElementById('out_rev').innerText = `$${Math.round(revenue).toLocaleString()}`;
         document.getElementById('out_roas').innerText = `${roas.toFixed(1)}x ROAS`;
-        
         document.getElementById('out_cac').innerText = `$${Math.round(cac).toLocaleString()}`;
         document.getElementById('out_cpl').innerText = `CPL: $${Math.round(cpl).toLocaleString()}`;
-
         document.getElementById('out_total_conv').innerText = `${leadToWin.toFixed(1)}%`;
 
         renderFunnel([
@@ -408,9 +405,25 @@
     function renderFunnel(steps) {
         const container = document.getElementById('funnel_container');
         container.innerHTML = '';
-        const max = steps[0].val;
+        
+        // Logarithmic Scale Logic
+        const maxVal = steps[0].val;
+        // Use Math.log10 for scaling. Add 1 to avoid log(0) issues.
+        const logMax = Math.log10(maxVal + 1);
+
         steps.forEach(s => {
-            const pct = max > 0 ? (s.val / max) * 100 : 0;
+            let widthPct = 0;
+            if (s.val > 0) {
+                const logVal = Math.log10(s.val + 1);
+                // Calculate percentage based on log scale
+                // We square the ratio to make the drop-off look a bit more pronounced visually while still keeping small bars visible
+                const ratio = logVal / logMax;
+                widthPct = ratio * 100;
+            }
+            
+            // Ensure a minimum visual width so the bar doesn't disappear
+            widthPct = Math.max(widthPct, 2);
+
             container.innerHTML += `
                 <div class="funnel-step">
                     <div>
@@ -420,7 +433,7 @@
                         </div>
                         <div style="font-size:11px; color:var(--text-muted)">${s.meta}</div>
                     </div>
-                    <div class="funnel-bar-bg"><div class="funnel-bar" style="width:${pct}%"></div></div>
+                    <div class="funnel-bar-bg"><div class="funnel-bar" style="width:${widthPct}%"></div></div>
                     <div class="funnel-count">${Math.round(s.val).toLocaleString()}</div>
                 </div>
             `;
@@ -436,7 +449,6 @@
             ["ROAS", document.getElementById('out_roas').innerText.replace('x ROAS',''), "x"],
             ["Cost Per Lead", document.getElementById('out_cpl').innerText.replace('CPL: $','').replace(/,/g,''), "USD"],
             ["Cost Per Acquisition", document.getElementById('out_cac').innerText.replace('$','').replace(/,/g,''), "USD"],
-            ["Blended CPC", document.getElementById('out_cpc').innerText.replace('Blended CPC: $',''), "USD"],
             [],
             ["Funnel Stage", "Count", "Rate"],
         ];
